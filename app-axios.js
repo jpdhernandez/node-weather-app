@@ -4,11 +4,21 @@ const strftime = require("strftime");
 const secret = require("./secret/secret");
 
 const argv = yargs
+    .usage("Usage: $0 -a [address] -f [format]")
     .options({
         a: {
             demand: true,
             alias: "address",
             describe: "Address to fetch weather for",
+            string: true,
+            default: "Toronto"
+        },
+        f: {
+            demand: false,
+            default: "c",
+            alias: "format",
+            choices: ["c", "f"],
+            describe: "Temperature Format: Celsius or Fahrenheit",
             string: true
         }
     })
@@ -16,6 +26,7 @@ const argv = yargs
     .alias("help", "h")
     .argv;
 
+const format = argv.format === "c" ? "si" : "us";
 const encodedAdrress = encodeURIComponent(argv.address);
 const geocodeUrl = `http://maps.googleapis.com/maps/api/geocode/json?address=${encodedAdrress}`;
 
@@ -28,7 +39,7 @@ axios.get(geocodeUrl)
         const address = response.data.results[0].formatted_address;
         const latitude = response.data.results[0].geometry.location.lat;
         const longitude = response.data.results[0].geometry.location.lat;
-        const weatherUrl = `https://api.darksky.net/forecast/${secret}/${latitude},${longitude}?units=si`;
+        const weatherUrl = `https://api.darksky.net/forecast/${secret}/${latitude},${longitude}?units=${format}`;
 
         console.log(`Your current location is ${address}`);
         return axios.get(weatherUrl);
