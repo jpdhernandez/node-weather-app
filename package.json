@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/jpdhernandez/node-weather-app#readme",
   "dependencies": {
+    "axios": "^0.15.3",
+    "bluebird": "^3.4.7",
     "request": "^2.79.0",
     "strftime": "^0.10.0",
     "yargs": "^6.6.0"
